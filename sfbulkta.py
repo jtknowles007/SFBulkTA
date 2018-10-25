@@ -16,7 +16,9 @@ SFBulkTA: Automate adding multiple TA instances to SalesForce database
 ################################################################################
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.action_chains import ActionChains
 from credentials import *
+import time
 ################################################################################
 # Login to website
 ################################################################################
@@ -46,17 +48,28 @@ driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000YTmUX
 
 username = driver.find_element_by_id("username")
 password = driver.find_element_by_id("password")
-
+username.clear()
 username.send_keys(user)
+password.clear()
 password.send_keys(pswd)
 
 driver.find_element_by_name("Login").click()
 
 ###############################################################################
-# Open a new Task
+# Open a new Task and fill out some sample data
 ###############################################################################
 
 # What I've learned:
+# This seems pretty straight-forward.  Hardest part was just identifying the 
+# id of each individual element, but using Inspector built into browser
+# made it much easier than it used to be years ago!
+#
+# Some fields, such as the Subject field, are pre-populated with data.  Had
+# to use clear() to remove the old data and allow the new data to be written
+# into the field.  Before I found this, it would either add the string to 
+# what was there, or partially replace what was there with the new string. It 
+# was an inconsistend and ugly mess every time I ran through it.
+time.sleep(4)
 
 subject = driver.find_element_by_id("tsk5")
 subject.clear()
@@ -107,4 +120,16 @@ hhqi.select_by_visible_text("Yes")
 
 resources = Select(driver.find_element_by_id("00No000000EXDsB"))
 resources.select_by_visible_text("Yes")
+
+###############################################################################
+# Find and click the Save button
+###############################################################################
+#
+# What I've learned:
+# FOR TESTING, WE'LL BE FINDING AND CLICKING THE CANCEL BUTTON.
+driver.find_element_by_name("cancel").click()
+
+#cancelbtn = driver.find_element_by_name("cancel")
+#movetobutton = ActionChains(driver)
+#movetobutton.move_to_element(cancelbtn).click(cancelbtn).perform()
 
