@@ -19,6 +19,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from credentials import *
 import time
+import csv
 ################################################################################
 # Login to website
 ################################################################################
@@ -44,8 +45,8 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--user-data-dir=/home/john/.config/google-chrome")
 chrome_options.add_argument("--kiosk")
 driver = webdriver.Chrome(options=chrome_options)
-driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000YTmUX&followup=1&tsk5=Call&retURL=%2Fa0Ao000000YTmUX")
-
+#driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000YTmUX&followup=1&tsk5=Call&retURL=%2Fa0Ao000000YTmUX")
+driver.get("https://login.salesforce.com")
 username = driver.find_element_by_id("username")
 password = driver.find_element_by_id("password")
 username.clear()
@@ -56,70 +57,65 @@ password.send_keys(pswd)
 driver.find_element_by_name("Login").click()
 
 ###############################################################################
-# Open a new Task and fill out some sample data
+# Begin looping through CSV and populating data
 ###############################################################################
 
 # What I've learned:
-# This seems pretty straight-forward.  Hardest part was just identifying the 
-# id of each individual element, but using Inspector built into browser
-# made it much easier than it used to be years ago!
-#
-# Some fields, such as the Subject field, are pre-populated with data.  Had
-# to use clear() to remove the old data and allow the new data to be written
-# into the field.  Before I found this, it would either add the string to 
-# what was there, or partially replace what was there with the new string. It 
-# was an inconsistend and ugly mess every time I ran through it.
-time.sleep(4)
+csvdatafile = open("hha_data.csv")
+salesforcedata = csv.DictReader(csvdatafile)
+for row in salesforcedata:
+     
+    driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000" + row['PageURL'] + "&followup=1&tsk5=Technical%20Assistance")
 
-subject = driver.find_element_by_id("tsk5")
-subject.clear()
-subject.send_keys("Technical Assistance")
+    subject = driver.find_element_by_id("tsk5")
+    subject.clear()
+    subject.send_keys("Technical Assistance")
 
-name = driver.find_element_by_id("tsk2")
-name.send_keys("Cody Mullen")
+    name = driver.find_element_by_id("tsk2")
+    name.send_keys(row['POC'])
 
-duedate = driver.find_element_by_id("tsk4")
-duedate.clear()
-duedate.send_keys("8/8/1997")
+    duedate = driver.find_element_by_id("tsk4")
+    duedate.clear()
+    duedate.send_keys("8/8/1997")
 
-endddate = driver.find_element_by_id("00N1J00000EVeQ1")
-endddate.send_keys("8/8/1997")
+    endddate = driver.find_element_by_id("00N1J00000EVeQ1")
+    endddate.send_keys("8/8/1997")
 
-comments = driver.find_element_by_id("tsk6")
-comments.send_keys("This is a test comment.")
+    comments = driver.find_element_by_id("tsk6")
+    comments.send_keys("This is a test comment.")
 
-bestpractices = Select(driver.find_element_by_id("00No000000EXDsE"))
-bestpractices.select_by_visible_text("Yes")
+    bestpractices = Select(driver.find_element_by_id("00No000000EXDsE"))
+    bestpractices.select_by_visible_text("Yes")
 
-sustainability = Select(driver.find_element_by_id("00No000000EXDsL"))
-sustainability.select_by_visible_text("Yes")
+    sustainability = Select(driver.find_element_by_id("00No000000EXDsL"))
+    sustainability.select_by_visible_text("Yes")
 
-hbpeval = Select(driver.find_element_by_id("00No000000EXDsI"))
-hbpeval.select_by_visible_text("Yes")
+    hbpeval = Select(driver.find_element_by_id("00No000000EXDsI"))
+    hbpeval.select_by_visible_text("Yes")
 
-meds = Select(driver.find_element_by_id("00No000000EXDsJ"))
-meds.select_by_visible_text("Yes")
+    meds = Select(driver.find_element_by_id("00No000000EXDsJ"))
+    meds.select_by_visible_text("Yes")
 
-selfmgmt = Select(driver.find_element_by_id("00No000000EXDsC"))
-selfmgmt.select_by_visible_text("Yes")
+    selfmgmt = Select(driver.find_element_by_id("00No000000EXDsC"))
+    selfmgmt.select_by_visible_text("Yes")
 
-lan = Select(driver.find_element_by_id("00No000000EXDsD"))
-lan.select_by_visible_text("Yes")
+    lan = Select(driver.find_element_by_id("00No000000EXDsD"))
+    lan.select_by_visible_text("Yes")
 
-engagement = Select(driver.find_element_by_id("00No000000EXDsF"))
-engagement.select_by_visible_text("Yes")
+    engagement = Select(driver.find_element_by_id("00No000000EXDsF"))
+    engagement.select_by_visible_text("Yes")
 
-literacy = Select(driver.find_element_by_id("00No000000EXDsH"))
-literacy.select_by_visible_text("Yes")
+    literacy = Select(driver.find_element_by_id("00No000000EXDsH"))
+    literacy.select_by_visible_text("Yes")
 
-bpguidelines = Select(driver.find_element_by_id("00No000000EXDsG"))
-bpguidelines.select_by_visible_text("Yes")
+    bpguidelines = Select(driver.find_element_by_id("00No000000EXDsG"))
+    bpguidelines.select_by_visible_text("Yes")
 
-hhqi = Select(driver.find_element_by_id("00No000000EXDsK"))
-hhqi.select_by_visible_text("Yes")
+    hhqi = Select(driver.find_element_by_id("00No000000EXDsK"))
+    hhqi.select_by_visible_text("Yes")
 
-resources = Select(driver.find_element_by_id("00No000000EXDsB"))
-resources.select_by_visible_text("Yes")
+    resources = Select(driver.find_element_by_id("00No000000EXDsB"))
+    resources.select_by_visible_text("Yes")
 
 ###############################################################################
 # Find and click the Save button
@@ -127,7 +123,7 @@ resources.select_by_visible_text("Yes")
 #
 # What I've learned:
 # FOR TESTING, WE'LL BE FINDING AND CLICKING THE CANCEL BUTTON.
-driver.find_element_by_name("cancel").click()
+    driver.find_element_by_name("cancel").click()
 
 #cancelbtn = driver.find_element_by_name("cancel")
 #movetobutton = ActionChains(driver)
