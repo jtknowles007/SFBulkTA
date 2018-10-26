@@ -25,31 +25,16 @@ import json
 # Login to website
 ################################################################################
 
-# What I've learned:
-#
-# There can be no other instances of chrome open when running this script.
-# If there are, there will be errors thrown attempting to login and the browser
-# will get stuck on the default homepage.
-#
-# In order to avoid having the SalesForce website repeatedly ask me to verify
-# my identity, it is necessary for the browser to open to a known profile, in
-# this case it's my default profile.  We accomplish this by passing options to
-# the browser startup specifying which profile to use.  Once we do this, the 
-# website will ask for verification once, then will remember that again until
-# the cache and cookies are removed.  Then it will ask again, just like normal.
-#
-# In order to make the chrome browser run maximized to ensure that as many 
-# page elements are visible to Selenium as possible, it is necessary to add
-# --kiosk as an argument to the browser instance.
-
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--user-data-dir=/home/john/.config/google-chrome")
 chrome_options.add_argument("--kiosk")
 driver = webdriver.Chrome(options=chrome_options)
-#driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000YTmUX&followup=1&tsk5=Call&retURL=%2Fa0Ao000000YTmUX")
+
 driver.get("https://login.salesforce.com")
+
 username = driver.find_element_by_id("username")
 password = driver.find_element_by_id("password")
+
 username.clear()
 username.send_keys(user)
 password.clear()
@@ -61,26 +46,25 @@ driver.find_element_by_name("Login").click()
 # Begin looping through CSV and populating data
 ###############################################################################
 
-# What I've learned:
 csvdatafile = open("hha_data.csv")
 salesforcedata = csv.DictReader(csvdatafile)
 
 ###############################################################################
-# Begin working with campaign information from json file
+# Load campaign information from json file
 ###############################################################################
+
 with open('campaign.json','r') as campaignfile:
     campaigndata = json.load(campaignfile)
 
-# What I've learned:
+###############################################################################
+# Loop through all rows in the CSV file and populate data
+###############################################################################
+
 for row in salesforcedata:
+    sfurl = "https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000"
+    sfurl = sfurl + row['PageURL'] + "&followup=1&tsk5=Technical%20Assistance"
 
-    driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000" + row['PageURL'] + "&followup=1&tsk5=Technical%20Assistance")
-
-# No need for this now.  We have passed this by way of the URL
-
-    #subject = driver.find_element_by_id("tsk5")
-    #subject.clear()
-    #subject.send_keys("Technical Assistance")
+    driver.get(sfurl)
 
     name = driver.find_element_by_id("tsk2")
     name.send_keys(row['POC'])
@@ -131,6 +115,5 @@ for row in salesforcedata:
 ###############################################################################
 # Find and click the Save button
 ###############################################################################
-#
-# What I've learned:
+    
     driver.find_element_by_name("save").click()
