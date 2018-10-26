@@ -20,6 +20,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from credentials import *
 import time
 import csv
+import json
 ################################################################################
 # Login to website
 ################################################################################
@@ -63,59 +64,71 @@ driver.find_element_by_name("Login").click()
 # What I've learned:
 csvdatafile = open("hha_data.csv")
 salesforcedata = csv.DictReader(csvdatafile)
+
+###############################################################################
+# Begin working with campaign information from json file
+###############################################################################
+with open('campaign.json','r') as campaignfile:
+    campaigndata = json.load(campaignfile)
+thedate = campaigndata['date']
+comment = campaigndata['comment']
+
+# What I've learned:
 for row in salesforcedata:
-     
+
     driver.get("https://na74.salesforce.com/00T/e?title=Call&what_id=a0Ao000000" + row['PageURL'] + "&followup=1&tsk5=Technical%20Assistance")
 
-    subject = driver.find_element_by_id("tsk5")
-    subject.clear()
-    subject.send_keys("Technical Assistance")
+# No need for this now.  We have passed this by way of the URL
+
+    #subject = driver.find_element_by_id("tsk5")
+    #subject.clear()
+    #subject.send_keys("Technical Assistance")
 
     name = driver.find_element_by_id("tsk2")
     name.send_keys(row['POC'])
 
     duedate = driver.find_element_by_id("tsk4")
     duedate.clear()
-    duedate.send_keys("8/8/1997")
+    duedate.send_keys(campaigndata['date'])
 
     endddate = driver.find_element_by_id("00N1J00000EVeQ1")
-    endddate.send_keys("8/8/1997")
+    endddate.send_keys(campaigndata['date'])
 
     comments = driver.find_element_by_id("tsk6")
-    comments.send_keys("This is a test comment.")
+    comments.send_keys(campaigndata['comment'])
 
     bestpractices = Select(driver.find_element_by_id("00No000000EXDsE"))
-    bestpractices.select_by_visible_text("Yes")
+    bestpractices.select_by_visible_text(campaigndata['BestPractices'])
 
     sustainability = Select(driver.find_element_by_id("00No000000EXDsL"))
-    sustainability.select_by_visible_text("Yes")
+    sustainability.select_by_visible_text(campaigndata['Sustainability'])
 
     hbpeval = Select(driver.find_element_by_id("00No000000EXDsI"))
-    hbpeval.select_by_visible_text("Yes")
+    hbpeval.select_by_visible_text(campaigndata['HBPEvaluation'])
 
     meds = Select(driver.find_element_by_id("00No000000EXDsJ"))
-    meds.select_by_visible_text("Yes")
+    meds.select_by_visible_text(campaigndata['Medication'])
 
     selfmgmt = Select(driver.find_element_by_id("00No000000EXDsC"))
-    selfmgmt.select_by_visible_text("Yes")
+    selfmgmt.select_by_visible_text(campaigndata['SelfManagement'])
 
     lan = Select(driver.find_element_by_id("00No000000EXDsD"))
-    lan.select_by_visible_text("Yes")
+    lan.select_by_visible_text(campaigndata['Lan'])
 
     engagement = Select(driver.find_element_by_id("00No000000EXDsF"))
-    engagement.select_by_visible_text("Yes")
+    engagement.select_by_visible_text(campaigndata['BeneEngagement'])
 
     literacy = Select(driver.find_element_by_id("00No000000EXDsH"))
-    literacy.select_by_visible_text("Yes")
+    literacy.select_by_visible_text(campaigndata['HealthLiteracy'])
 
     bpguidelines = Select(driver.find_element_by_id("00No000000EXDsG"))
-    bpguidelines.select_by_visible_text("Yes")
+    bpguidelines.select_by_visible_text(campaigndata['BPGuidelines'])
 
     hhqi = Select(driver.find_element_by_id("00No000000EXDsK"))
-    hhqi.select_by_visible_text("Yes")
+    hhqi.select_by_visible_text(campaigndata['HHQI'])
 
     resources = Select(driver.find_element_by_id("00No000000EXDsB"))
-    resources.select_by_visible_text("Yes")
+    resources.select_by_visible_text(campaigndata['EdResources'])
 
 ###############################################################################
 # Find and click the Save button
