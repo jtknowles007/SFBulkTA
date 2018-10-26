@@ -12,3 +12,6 @@ ENV/
 
 # Sensitive information
 credentials.py
+campaign.json
+hha_data.csv
+
