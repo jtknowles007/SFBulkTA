@@ -70,8 +70,6 @@ salesforcedata = csv.DictReader(csvdatafile)
 ###############################################################################
 with open('campaign.json','r') as campaignfile:
     campaigndata = json.load(campaignfile)
-thedate = campaigndata['date']
-comment = campaigndata['comment']
 
 # What I've learned:
 for row in salesforcedata:
@@ -86,7 +84,7 @@ for row in salesforcedata:
 
     name = driver.find_element_by_id("tsk2")
     name.send_keys(row['POC'])
-
+    
     duedate = driver.find_element_by_id("tsk4")
     duedate.clear()
     duedate.send_keys(campaigndata['date'])
@@ -135,10 +133,4 @@ for row in salesforcedata:
 ###############################################################################
 #
 # What I've learned:
-# FOR TESTING, WE'LL BE FINDING AND CLICKING THE CANCEL BUTTON.
-    driver.find_element_by_name("cancel").click()
-
-#cancelbtn = driver.find_element_by_name("cancel")
-#movetobutton = ActionChains(driver)
-#movetobutton.move_to_element(cancelbtn).click(cancelbtn).perform()
-
+    driver.find_element_by_name("save").click()
