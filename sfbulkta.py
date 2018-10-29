@@ -117,3 +117,4 @@ for row in salesforcedata:
 ###############################################################################
     
     driver.find_element_by_name("save").click()
+driver.quit()
