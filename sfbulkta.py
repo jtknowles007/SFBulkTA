@@ -26,7 +26,7 @@ import json
 ################################################################################
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--user-data-dir=/home/john/.config/google-chrome")
+chrome_options.add_argument("--user-data-dir=/home/john/.config/google-chrome/")
 chrome_options.add_argument("--kiosk")
 driver = webdriver.Chrome(options=chrome_options)
 
