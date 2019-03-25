@@ -46,8 +46,11 @@ driver.find_element_by_name("Login").click()
 ###############################################################################
 # Begin looping through CSV and populating data
 ###############################################################################
-if sys.argv[1] == "hha":
-    csvdatafile = open("hha_only.csv")
+if len(sys.argv) == 2:
+    if sys.argv[1] == "hha":
+        csvdatafile = open("hha_only.csv")
+    if sys.argv[1] == "practice":
+        csvdatafile = open("practice_only.csv")
 else:
     csvdatafile = open("hha_practice.csv")
 
