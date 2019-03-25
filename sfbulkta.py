@@ -21,6 +21,7 @@ from credentials import *
 import time
 import csv
 import json
+import sys
 ################################################################################
 # Login to website
 ################################################################################
@@ -45,8 +46,11 @@ driver.find_element_by_name("Login").click()
 ###############################################################################
 # Begin looping through CSV and populating data
 ###############################################################################
+if sys.argv[1] == "hha":
+    csvdatafile = open("hha_only.csv")
+else:
+    csvdatafile = open("hha_practice.csv")
 
-csvdatafile = open("hha_data.csv")
 salesforcedata = csv.DictReader(csvdatafile)
 
 ###############################################################################
